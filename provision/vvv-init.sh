@@ -1,39 +1,22 @@
 project="${VVV_SITE_NAME}"
 
-echo "Commencing Bedrock Setup"
+echo "Optima Setup"
 
 # Make a database, if we don't already have one
 echo "Creating database"
 mysql -u root --password=root -e "CREATE DATABASE IF NOT EXISTS $project"
 mysql -u root --password=root -e "GRANT ALL PRIVILEGES ON $project.* TO wp@localhost IDENTIFIED BY 'wp';"
 
-# Download Bedrock
 if [ ! -d public_html ]
 then
-
   # Nginx Logs
   echo "Creating logs"
   mkdir -p ${VVV_PATH_TO_SITE}/log
   touch ${VVV_PATH_TO_SITE}/log/error.log
   touch ${VVV_PATH_TO_SITE}/log/access.log
-
-  echo "Installing Bedrock stack using Composer"
-
-  # TODO: change eval to cd ${VVV_PATH_TO_SITE}/public_html or use mkdir command
-  eval cd .. && composer create-project roots/bedrock public_html
-
-  # Start download theme
-  echo "Downloading Theme"
-  eval cd public_html/web/app/themes
-  git clone https://github.com/adamk22/base-camp.git $project-theme
-  eval cd $project-theme
-  composer install && npm install
-  # End download theme
 fi
 
 # The Vagrant site setup script will restart Nginx for us
-
-echo "$project Bedrock is now installed";
 
 echo "Configuring Nginx";
 
